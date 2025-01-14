@@ -1,6 +1,5 @@
 
 
-```markdown
 # Freelancer Project Management System (FPMS)
 
 Welcome to the **Freelancer Project Management System (FPMS)**! This project is a Class 12th Computer Science project designed to demonstrate the practical implementation of database management using Python and MySQL.
@@ -188,4 +187,3 @@ For any queries or feedback, please feel free to reach out!
 ---
 
 Enjoy managing your freelance projects with FPMS! 🎉
-```
