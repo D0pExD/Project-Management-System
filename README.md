@@ -17,7 +17,6 @@ Welcome to the **Freelancer Project Management System (FPMS)**! This project is 
 - [Requirements](#requirements)  
 - [Setup and Installation](#setup-and-installation)  
 - [Usage Instructions](#usage-instructions)  
-- [Documentation](#documentation)  
 - [Credits](#credits)  
 
 ---
@@ -26,8 +25,6 @@ Welcome to the **Freelancer Project Management System (FPMS)**! This project is 
 
 The **FPMS** is a comprehensive project management system that allows freelancers to manage their projects efficiently. It provides a **color-coded, user-friendly console interface** and a robust database schema that supports **tasks**, **project logs**, **archiving**, **searching**, and more. This system showcases advanced Python-MySQL integration techniques, suitable for a Class 12th Computer Science project.
 
-You can explore the project’s **web-based documentation** here:  
-👉 [FPMS Documentation](https://fpms-class12.vercel.app/)
 
 ---
 
@@ -168,13 +165,6 @@ You can explore the project’s **web-based documentation** here:
    - **View Tasks**: List all tasks belonging to a specific project.  
    - **Update Task**: Change task name, description, due date, status, etc.  
    - **Delete Task**: Remove an existing task.  
-
----
-
-## Documentation  
-
-To learn more about the advanced features, code structure, and usage examples, visit the project’s documentation page:  
-👉 [FPMS Documentation](https://fpms-class12.vercel.app/)
 
 ---
 
