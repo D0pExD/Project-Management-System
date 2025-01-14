@@ -342,9 +342,9 @@ def show_main_menu():
     """
     Display a visually appealing main menu with colors and ASCII formatting.
     """
-    print(f"\n{BOLD}{GREEN}{'='*50}{RESET}")
-    print(f"{BOLD}{GREEN}  F R E E L A N C E R   P R O J E C T   M G M T  {RESET}".center(50))
-    print(f"{BOLD}{GREEN}{'='*50}{RESET}")
+    print(f"\n{BOLD}{GREEN}{'='*70}{RESET}")
+    print(f"{BOLD}{GREEN}  F R E E L A N C E R   P R O J E C T   M G M T   BY   RAM CHIMNANI {RESET}".center(50))
+    print(f"{BOLD}{GREEN}{'='*70}{RESET}")
     print(f"{CYAN} 1.{RESET}  Add Project")
     print(f"{CYAN} 2.{RESET}  View Projects (Active Only)")
     print(f"{CYAN} 3.{RESET}  Update Project")
