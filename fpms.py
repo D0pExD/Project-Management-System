@@ -2,7 +2,19 @@ import mysql.connector
 from datetime import datetime
 
 ###############################################################################
-#                        Database Connection                                  #
+#                           ANSI Color Codes                                  #
+###############################################################################
+# You can adjust these as desired to get different colors or effects.
+RESET = "\033[0m"
+BOLD = "\033[1m"
+GREEN = "\033[1;32m"
+CYAN = "\033[1;36m"
+BLUE = "\033[1;34m"
+MAGENTA = "\033[1;35m"
+YELLOW = "\033[1;33m"
+
+###############################################################################
+#                           Database Connection                               #
 ###############################################################################
 def connect_db():
     return mysql.connector.connect(
@@ -13,7 +25,7 @@ def connect_db():
     )
 
 ###############################################################################
-#                         Project Management                                  #
+#                           Projects CRUD                                     #
 ###############################################################################
 def add_project(name, client_name, payment, deadline, progress, priority, 
                 team_members, client_email, client_phone, payment_status):
@@ -29,7 +41,7 @@ def add_project(name, client_name, payment, deadline, progress, priority,
               team_members, client_email, client_phone, payment_status)
     cursor.execute(sql, values)
     conn.commit()
-    print("\nProject added successfully!")
+    print(f"\n{GREEN}Project added successfully!{RESET}")
     conn.close()
 
 def view_projects(show_archived=False):
@@ -44,7 +56,7 @@ def view_projects(show_archived=False):
         sql = "SELECT * FROM projects WHERE archived = 0"
     cursor.execute(sql)
     projects = cursor.fetchall()
-    print("\n--- Projects ---")
+    print(f"\n{BOLD}--- Projects ---{RESET}")
     for project in projects:
         print(project)
     conn.close()
@@ -68,7 +80,7 @@ def search_projects(query):
     wildcard = f"%{query}%"
     cursor.execute(sql, (wildcard, wildcard, wildcard))
     projects = cursor.fetchall()
-    print("\n--- Search Results ---")
+    print(f"\n{BOLD}--- Search Results ---{RESET}")
     for project in projects:
         print(project)
     conn.close()
@@ -104,7 +116,7 @@ def update_project(project_id, **kwargs):
     log_message = f"Updated fields: {kwargs}"
     add_project_log(project_id, log_message)
 
-    print("\nProject updated successfully!")
+    print(f"\n{GREEN}Project updated successfully!{RESET}")
     conn.close()
 
 def delete_project(project_id):
@@ -113,7 +125,7 @@ def delete_project(project_id):
     sql = "DELETE FROM projects WHERE project_id = %s"
     cursor.execute(sql, (project_id,))
     conn.commit()
-    print("\nProject deleted successfully!")
+    print(f"\n{GREEN}Project deleted successfully!{RESET}")
     conn.close()
 
 def archive_project(project_id):
@@ -127,7 +139,7 @@ def archive_project(project_id):
     conn.commit()
 
     add_project_log(project_id, "Archived project.")
-    print("\nProject archived successfully!")
+    print(f"\n{GREEN}Project archived successfully!{RESET}")
     conn.close()
 
 def mark_project_completed(project_id):
@@ -145,7 +157,7 @@ def mark_project_completed(project_id):
     )
 
 ###############################################################################
-#                              Task Management                                #
+#                           Task Management                                   #
 ###############################################################################
 def add_task(project_id, task_name, description, assigned_to, due_date, priority):
     conn = connect_db()
@@ -161,7 +173,7 @@ def add_task(project_id, task_name, description, assigned_to, due_date, priority
     # Log the creation of a new task
     add_project_log(project_id, f"Task created: {task_name}")
     
-    print("\nTask added successfully!")
+    print(f"\n{GREEN}Task added successfully!{RESET}")
     conn.close()
 
 def view_tasks(project_id):
@@ -170,7 +182,7 @@ def view_tasks(project_id):
     sql = "SELECT * FROM tasks WHERE project_id = %s"
     cursor.execute(sql, (project_id,))
     tasks = cursor.fetchall()
-    print(f"\n--- Tasks for Project ID {project_id} ---")
+    print(f"\n{BOLD}--- Tasks for Project ID {project_id} ---{RESET}")
     for task in tasks:
         print(task)
     conn.close()
@@ -208,7 +220,7 @@ def update_task(task_id, **kwargs):
         project_id = result[0]
         add_project_log(project_id, f"Updated task {task_id} fields: {kwargs}")
     
-    print("\nTask updated successfully!")
+    print(f"\n{GREEN}Task updated successfully!{RESET}")
     conn.close()
 
 def delete_task(task_id):
@@ -230,11 +242,11 @@ def delete_task(task_id):
     if project_id:
         add_project_log(project_id, f"Deleted task {task_id}")
         
-    print("\nTask deleted successfully!")
+    print(f"\n{GREEN}Task deleted successfully!{RESET}")
     conn.close()
 
 ###############################################################################
-#                             Project Logs                                    #
+#                           Project Logs                                      #
 ###############################################################################
 def add_project_log(project_id, log_message):
     """
@@ -256,13 +268,13 @@ def view_project_logs(project_id):
     sql = "SELECT * FROM project_logs WHERE project_id = %s ORDER BY log_date DESC"
     cursor.execute(sql, (project_id,))
     logs = cursor.fetchall()
-    print(f"\n--- Logs for Project ID {project_id} ---")
+    print(f"\n{BOLD}--- Logs for Project ID {project_id} ---{RESET}")
     for log in logs:
         print(log)
     conn.close()
 
 ###############################################################################
-#                       Reporting and Advanced Features                       #
+#                           Reporting                                         #
 ###############################################################################
 def generate_report(all_projects=False):
     """
@@ -278,26 +290,26 @@ def generate_report(all_projects=False):
     cursor.execute(sql)
     projects = cursor.fetchall()
 
-    print("\n--- Project Summary Report ---")
+    print(f"\n{BOLD}--- Project Summary Report ---{RESET}")
     for p in projects:
         (p_id, name, client_name, status, payment, deadline, progress,
          priority, team_members, client_email, client_phone,
          payment_status, completion_date, archived) = p
         print(
-            f"\nProject ID: {p_id}\n"
-            f"Name: {name}\n"
-            f"Client: {client_name}\n"
-            f"Status: {status}\n"
-            f"Payment: {payment}\n"
-            f"Deadline: {deadline}\n"
-            f"Progress: {progress}%\n"
-            f"Priority: {priority}\n"
-            f"Team: {team_members}\n"
-            f"Client Email: {client_email}\n"
-            f"Client Phone: {client_phone}\n"
-            f"Payment Status: {payment_status}\n"
-            f"Completion Date: {completion_date}\n"
-            f"Archived: {archived}"
+            f"\n{BOLD}Project ID:{RESET} {p_id}\n"
+            f"{BOLD}Name:{RESET} {name}\n"
+            f"{BOLD}Client:{RESET} {client_name}\n"
+            f"{BOLD}Status:{RESET} {status}\n"
+            f"{BOLD}Payment:{RESET} {payment}\n"
+            f"{BOLD}Deadline:{RESET} {deadline}\n"
+            f"{BOLD}Progress:{RESET} {progress}%\n"
+            f"{BOLD}Priority:{RESET} {priority}\n"
+            f"{BOLD}Team:{RESET} {team_members}\n"
+            f"{BOLD}Client Email:{RESET} {client_email}\n"
+            f"{BOLD}Client Phone:{RESET} {client_phone}\n"
+            f"{BOLD}Payment Status:{RESET} {payment_status}\n"
+            f"{BOLD}Completion Date:{RESET} {completion_date}\n"
+            f"{BOLD}Archived:{RESET} {archived}"
         )
     conn.close()
 
@@ -306,7 +318,6 @@ def export_projects_to_csv(filename="projects_export.csv"):
     Simple CSV export of project data to a local file.
     """
     import csv
-
     conn = connect_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM projects")
@@ -321,33 +332,41 @@ def export_projects_to_csv(filename="projects_export.csv"):
         for row in projects:
             writer.writerow(row)
 
-    print(f"\nProjects exported to {filename} successfully!")
+    print(f"\n{GREEN}Projects exported to {filename} successfully!{RESET}")
     conn.close()
 
 ###############################################################################
-#                               Main Menu                                     #
+#                           Menus                                             #
 ###############################################################################
-def main_menu():
-    while True:
-        print("\n==============================")
-        print("Freelancer Project Management")
-        print("==============================")
-        print("1.  Add Project")
-        print("2.  View Projects (Active Only)")
-        print("3.  Update Project")
-        print("4.  Archive Project")
-        print("5.  Delete Project")
-        print("6.  Search Projects")
-        print("7.  Mark Project Completed")
-        print("8.  Project Tasks Menu")
-        print("9.  View Project Logs")
-        print("10. Generate Report")
-        print("11. Export Projects to CSV")
-        print("12. View Archived Projects")
-        print("13. Exit")
+def show_main_menu():
+    """
+    Display a visually appealing main menu with colors and ASCII formatting.
+    """
+    print(f"\n{BOLD}{GREEN}{'='*50}{RESET}")
+    print(f"{BOLD}{GREEN}  F R E E L A N C E R   P R O J E C T   M G M T  {RESET}".center(50))
+    print(f"{BOLD}{GREEN}{'='*50}{RESET}")
+    print(f"{CYAN} 1.{RESET}  Add Project")
+    print(f"{CYAN} 2.{RESET}  View Projects (Active Only)")
+    print(f"{CYAN} 3.{RESET}  Update Project")
+    print(f"{CYAN} 4.{RESET}  Archive Project")
+    print(f"{CYAN} 5.{RESET}  Delete Project")
+    print(f"{CYAN} 6.{RESET}  Search Projects")
+    print(f"{CYAN} 7.{RESET}  Mark Project Completed")
+    print(f"{CYAN} 8.{RESET}  Project Tasks Menu")
+    print(f"{CYAN} 9.{RESET}  View Project Logs")
+    print(f"{CYAN}10.{RESET} Generate Report")
+    print(f"{CYAN}11.{RESET} Export Projects to CSV")
+    print(f"{CYAN}12.{RESET} View Archived Projects")
+    print(f"{CYAN}13.{RESET} Exit")
 
-        choice = input("Enter your choice: ")
-        
+def main_menu():
+    """
+    The main loop for the program, calling show_main_menu() for a nicer look.
+    """
+    while True:
+        show_main_menu()
+        choice = input(f"{BOLD}Enter your choice:{RESET} ")
+
         if choice == '1':
             name = input("Enter project name: ")
             client_name = input("Enter client name: ")
@@ -367,7 +386,6 @@ def main_menu():
 
         elif choice == '3':
             project_id = int(input("Enter project ID: "))
-            # Let’s allow dynamic updates
             print("Enter new values (leave blank if no update):")
             new_status = input("New status: ")
             new_payment = input("New payment: ")
@@ -432,31 +450,29 @@ def main_menu():
             export_projects_to_csv(filename)
 
         elif choice == '12':
-            print("\n--- Archived Projects ---")
+            print(f"\n{BOLD}--- Archived Projects ---{RESET}")
             view_projects(show_archived=True)
 
         elif choice == '13':
-            print("Exiting...")
+            print(f"{YELLOW}Exiting... Goodbye!{RESET}")
             break
 
         else:
-            print("Invalid choice. Please try again.")
+            print(f"{MAGENTA}Invalid choice. Please try again.{RESET}")
 
-###############################################################################
-#                             Task Menu                                       #
-###############################################################################
 def task_menu():
     """
-    Sub-menu for managing tasks.
+    Sub-menu for managing tasks. We can also apply a bit of styling here.
     """
     while True:
-        print("\n======== Tasks Menu ========")
-        print("1. Add Task")
-        print("2. View Tasks for a Project")
-        print("3. Update Task")
-        print("4. Delete Task")
-        print("5. Return to Main Menu")
-        task_choice = input("Enter your choice: ")
+        print(f"\n{BLUE}{'='*10} Tasks Menu {'='*10}{RESET}")
+        print(f"{CYAN}1.{RESET} Add Task")
+        print(f"{CYAN}2.{RESET} View Tasks for a Project")
+        print(f"{CYAN}3.{RESET} Update Task")
+        print(f"{CYAN}4.{RESET} Delete Task")
+        print(f"{CYAN}5.{RESET} Return to Main Menu")
+
+        task_choice = input(f"{BOLD}Enter your choice:{RESET} ")
 
         if task_choice == '1':
             project_id = int(input("Enter project ID: "))
@@ -476,8 +492,8 @@ def task_menu():
             print("Enter new values (leave blank if no update):")
             new_name = input("New task name: ")
             new_desc = input("New description: ")
-            new_assigned = input("New assigned_to: ")
-            new_due = input("New due_date (YYYY-MM-DD): ")
+            new_assigned = input("New assigned to: ")
+            new_due = input("New due date (YYYY-MM-DD): ")
             new_status = input("New status (Pending, In Progress, Completed): ")
             new_priority = input("New priority (Low, Medium, High): ")
 
@@ -505,10 +521,7 @@ def task_menu():
             break
 
         else:
-            print("Invalid choice. Please try again.")
+            print(f"{MAGENTA}Invalid choice. Please try again.{RESET}")
 
-###############################################################################
-#                               Script Entry                                  #
-###############################################################################
 if __name__ == "__main__":
     main_menu()
